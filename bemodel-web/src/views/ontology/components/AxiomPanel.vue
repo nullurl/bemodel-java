@@ -3,7 +3,7 @@
     <el-alert
       type="info"
       :closable="false"
-      title="公理是本体要素间的形式化约束，是病案质控、危重症预警等结论的证据溯源依据"
+      title="公理定义工业对象与关系的形式化约束，为批次来源、质量放行与履约规则提供可追溯依据"
       style="margin-bottom: 12px"
     />
     <div class="filter-bar">

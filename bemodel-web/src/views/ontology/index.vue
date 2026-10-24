@@ -1373,7 +1373,7 @@ const closureRelation = ref('')
 const loadingClosure = ref(false)
 const closureResult = ref(null)
 
-const closureMode = ref(import.meta.env.VITE_INDUSTRY === 'forgepilot' ? 'paths' : 'closure')
+const closureMode = ref('paths')
 const closureDirection = ref('outgoing')
 const closureSource = ref('working')
 let closureRequest = 0

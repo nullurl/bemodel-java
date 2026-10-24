@@ -13,7 +13,7 @@
     <el-alert
       type="info"
       :closable="false"
-      :title="industrial ? '当前仅查询已配置的物理映射；未接入工业源时显示为空。演示实例请在工业本体全景连接 ForgePilot 快照。' : '实例通过概念-物理表映射从产品库反查，状态码按值字典翻译'"
+      title="当前仅查询已配置的物理映射；未接入工业源时显示为空。演示实例请在工业本体全景连接 ForgePilot 快照。"
       style="margin-bottom: 12px"
     />
     <div v-loading="loading">
@@ -44,18 +44,6 @@
               min-width="110"
               show-overflow-tooltip
             />
-            <el-table-column label="操作" width="90" fixed="right">
-              <template #default="{ row }">
-                <el-button
-                  v-if="resolveInhosNo(row)"
-                  link
-                  type="primary"
-                  size="small"
-                  @click="exportPatientRdf(resolveInhosNo(row))"
-                >导出RDF</el-button>
-                <span v-else>-</span>
-              </template>
-            </el-table-column>
           </el-table>
           <el-empty v-if="!src.instances.length" description="无实例数据" :image-size="40" />
           <el-pagination
@@ -78,12 +66,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { listInstances } from '../../../api/ontology'
-import { listFlowPatients } from '../../../api/flow'
-import { exportPatientRdf } from '../../../api/rdf'
 import { useConceptStore } from '../../../store/concept'
 
 const conceptStore = useConceptStore()
-const industrial = import.meta.env.VITE_INDUSTRY === 'forgepilot'
 
 const conceptCode = ref('')
 const availableConcepts = computed(() => conceptStore.concepts.filter(c => c.status !== 'DEPRECATED'))
@@ -95,38 +80,6 @@ const sourcePages = ref({})
 
 const srcKey = (src) => `${src.dsCode}.${src.tableName}`
 
-// 住院患者名录：PATIENT 概念实例行没有住院号字段，按 姓名|性别|年龄 反查
-const inpatients = ref([])
-
-const inpByKey = computed(() => {
-  const m = new Map()
-  for (const p of inpatients.value) m.set(`${p.patient_name}|${p.sex}|${p.age}`, p.inhos_no)
-  return m
-})
-
-const inpByName = computed(() => {
-  const m = new Map()
-  for (const p of inpatients.value) {
-    if (!m.has(p.patient_name)) {
-      m.set(p.patient_name, p.inhos_no)
-    } else if (m.get(p.patient_name) !== p.inhos_no) {
-      m.set(p.patient_name, null) // 重名，无法唯一确定
-    }
-  }
-  return m
-})
-
-// 实例行 → 住院号：优先行内的住院号字段（如 INP_VISIT 概念），
-// PATIENT 概念行用姓名/性别/年龄匹配住院患者名录；都拿不到则不显示导出入口
-const resolveInhosNo = (row) => {
-  const direct = row['住院号'] ?? row.inhos_no ?? row.inhosNo
-  if (direct && direct !== '-') return direct
-  if (conceptCode.value !== 'PATIENT' || !row['姓名']) return ''
-  const byKey = inpByKey.value.get(`${row['姓名']}|${row['性别']}|${row['年龄']}`)
-  if (byKey) return byKey
-  return inpByName.value.get(row['姓名']) || ''
-}
-
 const load = async () => {
   if (!conceptCode.value) return
   loading.value = true
@@ -137,9 +90,6 @@ const load = async () => {
     if (requested !== conceptCode.value) return
     data.value = result
     sourcePages.value = {}
-    if (import.meta.env.VITE_INDUSTRY !== 'forgepilot' && conceptCode.value === 'PATIENT' && !inpatients.value.length) {
-      inpatients.value = (await listFlowPatients(undefined, 1, 200)).list
-    }
   } finally {
     loading.value = false
   }

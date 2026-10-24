@@ -35,8 +35,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MissService extends ServiceImpl<OntologyMissMapper, OntologyMiss> {
 
-    @Value("${bemodel.domain-context:医疗}")
-    private String domainContext = "医疗";
+    @Value("${bemodel.domain-context:工业供应链管理}")
+    private String domainContext = "工业供应链管理";
 
     private final ConceptService conceptService;
     private final DomainMapper domainMapper;
@@ -277,7 +277,7 @@ public class MissService extends ServiceImpl<OntologyMissMapper, OntologyMiss> {
                 .append("，累计出现 ").append(miss.getCount()).append(" 次）\n\n");
         sb.append(buildOntologyContext());
         sb.append("\n请为该说法建议一个标准概念，只返回JSON对象：");
-        sb.append("{\"code\":\"大写蛇形编码（风格参考 INP_VISIT、FEE_DETAIL）\",\"name\":\"中文名称\",");
+        sb.append("{\"code\":\"稳定业务编码（风格参考 Lot、Demand）\",\"name\":\"中文名称\",");
         sb.append("\"domainCode\":\"从上面业务域列表中选择的编码\",\"definition\":\"业务定义\",");
         sb.append("\"reason\":\"一句中文人话解释为什么这样归类\"}。只返回JSON。");
         return sb.toString();

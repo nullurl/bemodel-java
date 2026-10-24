@@ -27,6 +27,6 @@ class IndustrialBoundaryFilterTest {
         new IndustrialBoundaryFilter().doFilter(request, response, (req,res) -> downstream.set(true));
         assertEquals(403,response.getStatus());
         assertFalse(downstream.get());
-        assertTrue(response.getContentAsString().contains("工业配置"));
+        assertTrue(response.getContentAsString().contains("工业本体"));
     }
 }

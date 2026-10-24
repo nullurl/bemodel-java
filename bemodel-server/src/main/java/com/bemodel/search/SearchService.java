@@ -27,8 +27,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SearchService {
 
-    @Value("${bemodel.domain-context:医疗}")
-    private String domainContext = "医疗";
+    @Value("${bemodel.domain-context:工业供应链管理}")
+    private String domainContext = "工业供应链管理";
 
     private final TermMapper termMapper;
     private final ConceptMapper conceptMapper;

@@ -1,14 +1,14 @@
 # ForgePilot 工业供应链迁移
 
-本地获取上游 `yueyezhufeng/bemodel-java`，基线提交 `78b4be93b03dbabca044ac06aad2b85557377873`。保留上游 Apache-2.0 文件；本目录记录工业改动。采用**独立工业配置与数据库**，未将患者、医嘱、诊断简单改名成工业对象。
+本地获取上游 `yueyezhufeng/bemodel-java`，基线提交 `78b4be93b03dbabca044ac06aad2b85557377873`。保留上游 Apache-2.0 文件；本目录记录工业改动。采用**工业专用应用与独立数据库**，原医疗业务、种子、路由和双模式构建分支已移除。
 
 ## 已落地的基础
 
 - 10 个业务域、45 类对象、287 个属性、58 类有方向及基数的关系。
 - 14 项管理规则、5 份动作契约、8 份指标口径、10 个能力问题；动作在本体页面不执行。
 - 沿用 BeModel 的对象/属性/关系管理、数据源管理、人工确认映射、术语、知识治理和发布审核底座。
-- `forgepilot` Spring 配置只加载 `db/industrial` 的工业迁移（V1 平台、V2 本体、V3 连接器配置），关闭医疗播种、医疗业务及尚未适配的问数/沙盘/医疗 MCP 回退入口。医疗版本的原始迁移未改写。
-- 工业建模、映射及口径搜索使用工业上下文；原患者实例导出与医疗规则配置在工业界面关闭。
+- 默认Spring配置与显式`forgepilot`配置均只加载`db/industrial`（V1平台、V2本体、V3连接器）。原医疗源码、播种、迁移目录和执行入口已移除；已应用的工业V1/V2校验保持不变。
+- 建模、映射及口径搜索使用工业上下文。前端只包含工业界面与JDBC工作台，不再打包临床规则编辑或患者导出。
 - 现有 ForgePilot 增加 `/api/demo/ontology/catalog` 与 `/api/demo/ontology/snapshot`。业务实例从同一 SQLite 读取事务投影，合格可用量仍由原业务守卫计算，不另维护一套库存。
 - 快照遵循原角色授权；全局实例拒绝供方账号，供方业务继续使用原本的本方工作台。导出不携带会话。
 
@@ -51,7 +51,7 @@
 # 仓库根目录：生成模型及管理端静态页面
 python3 forgepilot/publish.py
 npm ci --prefix bemodel-web
-npm run build:forgepilot --prefix bemodel-web
+npm run build --prefix bemodel-web
 
 # 创建仅绑定127.0.0.1的独立MySQL；密码生成在忽略目录.runtime/，不提交
 python3 forgepilot/dev.py init-db
@@ -65,7 +65,7 @@ python3 forgepilot/dev.py start
 
 访问 [工业管理端](http://127.0.0.1:18081/)。管理员 `admin/admin123`、建模员 `modeler/model123`、评审员 `reviewer/reviewer123`、只读 `viewer/viewer123` 为本机演示账号。`dev.py` 生成独立本机 JWT/加密密钥，默认关闭远端模型调用。服务日志 `.runtime/backend.log`，停止服务 `python3 forgepilot/dev.py stop`；数据库和卷继续保留。外部使用前需要更换演示账号和部署身份体系，本次未作公网部署。
 
-需要热更新可运行 `npm run dev:forgepilot --prefix bemodel-web`，地址18082，API代理至18081。Compose替代方案：`docker-compose -p forgepilot-ontology -f compose.forgepilot.yml up -d`；不要与直接启动的同端口数据库同时使用。
+需要热更新可运行 `npm run dev --prefix bemodel-web`，地址18082，API代理至18081。Compose替代方案：`docker-compose -p forgepilot-ontology -f compose.forgepilot.yml up -d`；不要与直接启动的同端口数据库同时使用。
 
 与已运行的 ForgePilot 同步模型和页面：
 

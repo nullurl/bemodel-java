@@ -46,7 +46,7 @@ class RelationQueryServiceTest {
     }
     @Test void unknownConceptRelationAndOptionsAreRejected(){
         data(List.of(rel("A","B","需要",0)));
-        assertThrows(BizException.class,()->service.preview("*","FEE_DETAIL","paths","outgoing"));
+        assertThrows(BizException.class,()->service.preview("*","Lot","paths","outgoing"));
         assertThrows(BizException.class,()->service.preview("missing","A","paths","outgoing"));
         assertThrows(BizException.class,()->service.preview("*","A","invented","outgoing"));
         assertThrows(BizException.class,()->service.preview("*","A","paths","both"));

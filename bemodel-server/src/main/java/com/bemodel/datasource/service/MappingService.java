@@ -42,8 +42,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class MappingService extends ServiceImpl<MappingMapper, Mapping> {
 
-    @Value("${bemodel.domain-context:医疗信息化}")
-    private String domainContext = "医疗信息化";
+    @Value("${bemodel.domain-context:工业供应链管理}")
+    private String domainContext = "工业供应链管理";
 
     private final SchemaScanService schemaScanService;
     private final ConceptMapper conceptMapper;
@@ -448,7 +448,7 @@ public class MappingService extends ServiceImpl<MappingMapper, Mapping> {
                 .toList();
     }
 
-    /** 概念编码 INP_VISIT → [inp_visit, inp, visit]：整体 + 拆词（列名多是拆词的字面） */
+    /** 概念编码 GoodsReceipt → [goodsreceipt]：整体 + 拆词（列名多是拆词的字面） */
     static List<String> splitSnake(String code) {
         if (code == null || code.isBlank()) {
             return List.of();

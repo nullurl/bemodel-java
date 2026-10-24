@@ -43,8 +43,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class OntologyProposalService extends ServiceImpl<OntologyProposalMapper, OntologyProposal> {
 
-    @Value("${bemodel.domain-context:医疗}")
-    private String domainContext = "医疗";
+    @Value("${bemodel.domain-context:工业供应链管理}")
+    private String domainContext = "工业供应链管理";
 
     private final OntologyMissMapper missMapper;
     private final ProposalRunMapper runMapper;
@@ -188,7 +188,7 @@ public class OntologyProposalService extends ServiceImpl<OntologyProposalMapper,
         sb.append("2) action=ATTACH_TERM：已有概念就是该说法的归宿，targetConceptCode 填既有概念编码");
         sb.append("（含义是把该说法作为其方言术语/别名归并，不是新建）。\n");
         sb.append("只返回JSON对象：{\"action\":\"NEW_CONCEPT|ATTACH_TERM\",");
-        sb.append("\"code\":\"仅NEW_CONCEPT：大写蛇形编码（风格参考 INP_VISIT、FEE_DETAIL）\",");
+        sb.append("\"code\":\"仅NEW_CONCEPT：稳定业务编码（风格参考 Lot、Demand）\",");
         sb.append("\"name\":\"仅NEW_CONCEPT：中文名称\",");
         sb.append("\"domainCode\":\"仅NEW_CONCEPT：业务域编码\",");
         sb.append("\"definition\":\"仅NEW_CONCEPT：业务定义\",");

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import java.util.*;
 
 /** Versioned, read-only integration contracts. These never enter the JDBC execution mapping table. */
 @Service
-@Profile("forgepilot")
 public class ConnectorFactoryService {
     private final JdbcTemplate jdbc;
     private final ObjectMapper json;

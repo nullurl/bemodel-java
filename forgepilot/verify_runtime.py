@@ -29,7 +29,7 @@ def run(base):
             assert not any(v['code'] in {'PATIENT','MEDICAL_ORDER','DIAGNOSIS'} for v in values)
         results.append({'check':endpoint,'status':'pass','count':count})
     status,payload=request('/api/industrial/status',token=token)
-    assert status==200 and payload['data']['medicalApplicationsEnabled'] is False
+    assert status==200 and payload['data']['applicationMode']=='forgepilot' and payload['data']['availableModes']==['forgepilot']
     status,payload=request('/api/ontology/check',{},token)
     assert status==200 and payload['code']==0 and payload['data']['blockerCount']==0,payload
     results.append({'check':'ontology_self_check','status':'pass','result':payload['data']})

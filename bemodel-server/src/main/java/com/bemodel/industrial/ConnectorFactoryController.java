@@ -2,11 +2,9 @@ package com.bemodel.industrial;
 
 import com.bemodel.common.Result;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Profile("forgepilot")
 @RequestMapping("/api/datasource/factory")
 public class ConnectorFactoryController {
     private final ConnectorFactoryService service;
