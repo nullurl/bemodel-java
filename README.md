@@ -1,6 +1,6 @@
 # ForgePilot 工业本体与接入管理
 
-围绕 ForgePilot 工业供应链管理建设对象、关系、规则、指标和来源映射数字底座。当前版本只提供工业应用：默认启动和普通前端构建均进入工业管理界面，已移除原医疗模式、医疗业务模块、播种数据、迁移入口和前端回退分支。
+围绕 ForgePilot 工业供应链管理建设对象、关系、规则、指标和来源映射数字底座。默认启动和前端构建均进入工业管理界面。
 
 ## 现有能力
 
@@ -24,7 +24,7 @@ python3 forgepilot/dev.py start
 
 管理端：[http://127.0.0.1:18081](http://127.0.0.1:18081)。前端开发：`npm run dev --prefix bemodel-web`，默认18082并代理至18081。`build:forgepilot`、`dev:forgepilot`为兼容命令，均构建同一工业应用。
 
-独立配置保存在 `application-forgepilot.yml`；不指定profile时也使用工业配置。没有医疗模式开关，其他profile名也不会恢复已删除模块。数据库固定使用 `forgepilot_industrial` 与 `db/industrial` 迁移，账号/密钥由忽略的 `.runtime/` 和环境变量提供。
+独立配置保存在 `application-forgepilot.yml`；不指定profile时也使用工业配置。数据库使用 `forgepilot_industrial` 与 `db/industrial` 迁移，账号/密钥由忽略的 `.runtime/` 和环境变量提供。
 
 本机演示账号：admin/admin123、modeler/model123、reviewer/reviewer123、viewer/viewer123。生产部署需接入自己的身份体系与受控密钥。不要把本机演示服务直接公开。
 
