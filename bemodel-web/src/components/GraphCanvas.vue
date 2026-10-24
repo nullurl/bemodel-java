@@ -46,6 +46,7 @@ const render = () => {
     : { left: 0, top: 0, width: el.value?.clientWidth, height: el.value?.clientHeight }
   chart.setOption(
     {
+      textStyle: { fontFamily: '"Times New Roman", "Source Han Serif SC", serif' },
       tooltip: {
         trigger: 'item',
         formatter: (p) =>
@@ -58,7 +59,7 @@ const render = () => {
             icon: 'circle',
             itemWidth: 10,
             itemHeight: 10,
-            textStyle: { fontSize: 12 }
+            textStyle: { fontSize: 12, fontFamily: '"Times New Roman", "Source Han Serif SC", serif' }
           }
         : undefined,
       graphic: props.graphic,

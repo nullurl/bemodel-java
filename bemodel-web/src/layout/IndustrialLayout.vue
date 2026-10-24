@@ -5,7 +5,7 @@
       <nav aria-label="工业管理导航">
         <router-link v-for="item in items" :key="item.path" :to="item.path"><component :is="item.icon" />{{ item.name }}</router-link>
       </nav>
-      <div class="industrial-footer"><small>工业配置 · 模型草稿</small><a href="http://127.0.0.1:8000/solution/index.html" target="_blank" rel="noopener">一体化方案与汇报 ↗</a><a href="http://127.0.0.1:8000/" target="_blank" rel="noopener">业务工作台 ↗</a><a href="http://127.0.0.1:8000/ontology/index.html" target="_blank" rel="noopener">查看当前业务实例 ↗</a></div>
+      <div class="industrial-footer"><small>工业配置 · 模型草稿</small><a href="http://127.0.0.1:8000/solution/demo-journey.html" target="_blank" rel="noopener">完整案例演示 ↗</a><a href="http://127.0.0.1:8000/solution/index.html" target="_blank" rel="noopener">一体化方案与汇报 ↗</a><a href="http://127.0.0.1:8000/" target="_blank" rel="noopener">业务工作台 ↗</a><a href="http://127.0.0.1:8000/ontology/index.html" target="_blank" rel="noopener">查看当前业务实例 ↗</a></div>
     </aside>
     <section class="industrial-body">
       <header><div><strong>{{ route.meta.title }}</strong><small>{{ route.meta.subtitle }}</small></div><div class="industrial-user">{{ userStore.user?.displayName }} / {{ userStore.roleText }}<button @click="logout">退出</button></div></header>
