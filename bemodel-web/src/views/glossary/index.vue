@@ -6,7 +6,7 @@
         <el-input
           v-model="q"
           size="large"
-          placeholder="用自然语言查询业务口径，如：出院人数怎么算 / 病员是什么"
+          placeholder="用自然语言查询业务口径，如：实际材料缺口怎么算 / 合格可用是什么"
           clearable
           @keyup.enter="doSearch"
         >
@@ -60,8 +60,8 @@
             </el-select>
             <el-select v-model="codeSystemFilter" style="width: 160px" @change="termPage = 1">
               <el-option label="全部体系" value="" />
-              <el-option label="SNOMED CT" value="SNOMED CT" />
-              <el-option label="ICD-10" value="ICD-10" />
+              <el-option v-if="!industrial" label="SNOMED CT" value="SNOMED CT" />
+              <el-option v-if="!industrial" label="ICD-10" value="ICD-10" />
               <el-option label="平台标准" value="平台标准" />
               <el-option label="产品方言" value="产品方言" />
             </el-select>
@@ -240,7 +240,7 @@
             :total="filteredMetrics.length"
           />
         </el-tab-pane>
-        <el-tab-pane label="对账" name="reconcile">
+        <el-tab-pane v-if="!industrial" label="对账" name="reconcile">
           <div class="metric-header">
             <span class="metric-header-title">对账分歧</span>
             <span class="rec-tip">跑一次 = 逐口径实测 + 算差额 + 可选下钻明细,每次运行落历史</span>
@@ -385,7 +385,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="来源产品">
-          <el-input v-model="termForm.sourceProduct" placeholder="如 HIS / LIS / 平台标准" />
+          <el-input v-model="termForm.sourceProduct" placeholder="如 ERP / WMS / 平台标准" />
         </el-form-item>
         <el-form-item label="类型">
           <el-radio-group v-model="termForm.termType">
@@ -632,6 +632,7 @@
 </template>
 
 <script setup>
+const industrial = import.meta.env.VITE_INDUSTRY === 'forgepilot'
 import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
@@ -1288,7 +1289,7 @@ onMounted(async () => {
   } catch (e) {
     // 列表加载失败保持页面空态；深链定位会提示「未加载」
   }
-  loadReconcile()
+  if (!industrial) loadReconcile()
   const code = route.query.metric
   if (code) locateMetric(String(code))
 })

@@ -40,7 +40,7 @@
           <el-input v-model="form.axiomCode" placeholder="如 AX-007" />
         </el-form-item>
         <el-form-item label="主语" required>
-          <el-input v-model="form.subject" placeholder="如 检验报告（危急值）" />
+          <el-input v-model="form.subject" placeholder="如 批次来源核验" />
         </el-form-item>
         <el-form-item label="谓词" required>
           <el-select v-model="form.predicate" style="width: 100%">
@@ -48,7 +48,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="宾语" required>
-          <el-input v-model="form.object" placeholder="如 诊断" />
+          <el-input v-model="form.object" placeholder="如 授权放行" />
         </el-form-item>
         <el-form-item label="类型">
           <el-select v-model="form.axiomType" style="width: 100%">

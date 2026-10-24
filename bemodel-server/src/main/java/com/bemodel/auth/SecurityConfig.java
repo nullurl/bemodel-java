@@ -2,6 +2,7 @@ package com.bemodel.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -32,6 +33,9 @@ import java.util.Map;
  */
 @Configuration
 public class SecurityConfig {
+
+    @Value("${bemodel.industrial.same-origin-frame:false}")
+    private boolean industrialSameOriginFrame;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -75,6 +79,9 @@ public class SecurityConfig {
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((req, res, ex) -> writeJson(res, 401, "未登录或已过期"))
                         .accessDeniedHandler((req, res, ex) -> writeJson(res, 403, "权限不足")));
+        if (industrialSameOriginFrame) {
+            http.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+        }
         return http.build();
     }
 

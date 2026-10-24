@@ -42,6 +42,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class MappingService extends ServiceImpl<MappingMapper, Mapping> {
 
+    @Value("${bemodel.domain-context:医疗信息化}")
+    private String domainContext = "医疗信息化";
+
     private final SchemaScanService schemaScanService;
     private final ConceptMapper conceptMapper;
     private final AttributeMapper attributeMapper;
@@ -284,7 +287,7 @@ public class MappingService extends ServiceImpl<MappingMapper, Mapping> {
                             + " 个）。若确实无合适映射请给出空建议，不要硬配。";
                 }
                 llmResp = deepSeekClient.chat("MAPPING_SUGGEST",
-                        "你是医疗信息化本体映射专家。只返回JSON数组，不要多余文字。", prompt);
+                        "你是" + domainContext + "本体映射专家。只返回JSON数组，不要多余文字。", prompt);
             }
             List<Map<String, Object>> parsed =
                     llmResp.map(r -> parseLlmSuggestions(r, batch)).orElse(List.of());

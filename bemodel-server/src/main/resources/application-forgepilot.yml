@@ -1,0 +1,28 @@
+# Industrial profile: isolated metadata schema and industrial-only migrations.
+server:
+  address: 127.0.0.1
+  port: ${FORGEPILOT_MODEL_PORT:18081}
+spring:
+  application:
+    name: forgepilot-ontology
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:13306}/forgepilot_industrial?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+  flyway:
+    locations: classpath:db/industrial
+    baseline-on-migrate: false
+  web:
+    resources:
+      static-locations: ${FORGEPILOT_WEB_LOCATION:file:../bemodel-web/dist/}
+bemodel:
+  domain-context: 工业供应链管理
+  industrial:
+    same-origin-frame: true
+  semantic:
+    scene-ds: FP_ERP,FP_WMS,FP_QMS,FP_MES,FP_SRM,FP_TMS,FP_PLM,FP_FINANCE
+  # Industrial execution adapters are not enabled by model registration.
+  inspect:
+    cron: "-"
+  reconcile:
+    cron: "-"
+  proposal:
+    cron: "-"

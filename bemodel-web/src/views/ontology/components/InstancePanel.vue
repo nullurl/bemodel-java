@@ -3,7 +3,7 @@
     <div class="filter-bar">
       <el-select v-model="conceptCode" filterable style="width: 260px" @change="load">
         <el-option
-          v-for="c in conceptStore.concepts"
+          v-for="c in availableConcepts"
           :key="c.code"
           :label="`${c.name}（${c.code}）`"
           :value="c.code"
@@ -13,7 +13,7 @@
     <el-alert
       type="info"
       :closable="false"
-      title="实例通过「概念-物理表映射」从产品库实时反查，状态码已经值字典翻译成标准口径"
+      :title="industrial ? '当前仅查询已配置的物理映射；未接入工业源时显示为空。演示实例请在工业本体全景连接 ForgePilot 快照。' : '实例通过概念-物理表映射从产品库反查，状态码按值字典翻译'"
       style="margin-bottom: 12px"
     />
     <div v-loading="loading">
@@ -83,8 +83,10 @@ import { exportPatientRdf } from '../../../api/rdf'
 import { useConceptStore } from '../../../store/concept'
 
 const conceptStore = useConceptStore()
+const industrial = import.meta.env.VITE_INDUSTRY === 'forgepilot'
 
-const conceptCode = ref('FEE_DETAIL')
+const conceptCode = ref('')
+const availableConcepts = computed(() => conceptStore.concepts.filter(c => c.status !== 'DEPRECATED'))
 const pageSize = 20
 const data = ref(null)
 const loading = ref(false)
@@ -129,9 +131,13 @@ const load = async () => {
   if (!conceptCode.value) return
   loading.value = true
   try {
-    data.value = await listInstances(conceptCode.value, { pageNum: 1, pageSize })
+    data.value = null
+    const requested = conceptCode.value
+    const result = await listInstances(requested, { pageNum: 1, pageSize })
+    if (requested !== conceptCode.value) return
+    data.value = result
     sourcePages.value = {}
-    if (conceptCode.value === 'PATIENT' && !inpatients.value.length) {
+    if (import.meta.env.VITE_INDUSTRY !== 'forgepilot' && conceptCode.value === 'PATIENT' && !inpatients.value.length) {
       inpatients.value = (await listFlowPatients(undefined, 1, 200)).list
     }
   } finally {
@@ -161,9 +167,10 @@ const loadSourcePage = async (src, page) => {
   }
 }
 
-onMounted(() => {
-  conceptStore.fetchAll()
-  load()
+onMounted(async () => {
+  await conceptStore.fetchAll()
+  conceptCode.value = availableConcepts.value[0]?.code || ''
+  if (conceptCode.value) await load()
 })
 </script>
 

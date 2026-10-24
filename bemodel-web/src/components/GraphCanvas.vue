@@ -1,5 +1,5 @@
 <template>
-  <div ref="el" class="graph-canvas" :style="{ height, width }"></div>
+  <div ref="el" class="graph-canvas" :data-node-count="nodes.length" :data-edge-count="edges.length" :style="{ height, width }"></div>
 </template>
 
 <script setup>
@@ -21,6 +21,7 @@ const props = defineProps({
   // 'none'（节点自带 x/y 固定布局）| 'force'（力导向）
   layout: { type: String, default: 'none' },
   height: { type: String, default: '600px' },
+  initialZoom: { type: Number, default: 1 },
   width: { type: String, default: '100%' },
   loading: { type: Boolean, default: false },
   showLegend: { type: Boolean, default: false },
@@ -70,6 +71,7 @@ const render = () => {
           links: props.edges,
           categories: props.categories,
           roam: isForce,
+          zoom: isForce ? props.initialZoom : 1,
           edgeSymbol: ['none', 'arrow'],
           edgeSymbolSize: 7,
           label: { show: true, position: 'right', fontSize: 12, color: '#303133' },

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainLayout from '../layout/MainLayout.vue'
 import { useUserStore } from '../store/user'
+const industrial = import.meta.env.VITE_INDUSTRY === 'forgepilot'
 
 const routes = [
   {
@@ -11,9 +12,14 @@ const routes = [
   },
   {
     path: '/',
-    component: MainLayout,
-    redirect: '/architecture',
+    component: industrial ? () => import('../layout/IndustrialLayout.vue') : MainLayout,
+    redirect: industrial ? '/industrial' : '/architecture',
     children: [
+      {
+        path: 'industrial',
+        component: () => import('../views/industrial/index.vue'),
+        meta: { title: '工业本体全景', subtitle: '工业供应链模型基础、来源映射与接入缺口' }
+      },
       {
         path: 'architecture',
         name: 'architecture',
@@ -30,7 +36,7 @@ const routes = [
         path: 'datasource',
         name: 'datasource',
         component: () => import('../views/datasource/index.vue'),
-        meta: { title: '数据源绑定', subtitle: '把业务系统的数据对应到统一业务概念，让数据"说同一种语言"' }
+        meta: { title: industrial ? '数据源与字段映射' : '数据源绑定', subtitle: industrial ? '连接器工厂 · 工业数据接入契约 · 字段语义映射' : '把业务系统的数据对应到统一业务概念，让数据"说同一种语言"' }
       },
       {
         path: 'glossary',
@@ -138,7 +144,12 @@ router.beforeEach((to) => {
   if (!userStore.isLoggedIn) {
     return { path: '/login', query: { redirect: to.fullPath } }
   }
+  if (industrial && !['/industrial','/ontology','/datasource','/glossary','/knowledge'].includes(to.path)) {
+    return '/industrial'
+  }
   return true
 })
 
 export default router
+
+router.afterEach(() => { document.title = industrial ? "ForgePilot · 工业本体管理" : "BeModel 本体管理" })

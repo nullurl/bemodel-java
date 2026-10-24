@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -33,6 +34,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MissService extends ServiceImpl<OntologyMissMapper, OntologyMiss> {
+
+    @Value("${bemodel.domain-context:医疗}")
+    private String domainContext = "医疗";
 
     private final ConceptService conceptService;
     private final DomainMapper domainMapper;
@@ -222,7 +226,7 @@ public class MissService extends ServiceImpl<OntologyMissMapper, OntologyMiss> {
     public Map<String, Object> classify(Long missId) {
         OntologyMiss miss = requireMiss(missId);
         Optional<String> llm = deepSeekClient.chat("MISS_CLASSIFY",
-                "你是医疗本体治理助手，为平台使用中出现的词表外说法建议标准概念归类。只返回JSON，不要多余文字。",
+                "你是" + domainContext + "本体治理助手，为平台使用中出现的词表外说法建议标准概念归类。只返回JSON，不要多余文字。",
                 buildClassifyPrompt(miss));
         Map<String, Object> suggestion = llm.map(this::parseClassifySuggestion).orElse(null);
         if (suggestion == null) {

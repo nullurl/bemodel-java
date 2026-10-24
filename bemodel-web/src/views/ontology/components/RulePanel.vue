@@ -210,7 +210,7 @@
     <el-dialog v-model="dialogVisible" :title="dialogMode === 'create' ? '新建规则' : '编辑规则'" width="680px">
       <el-form :model="form" label-width="90px">
         <el-form-item label="规则编码" required>
-          <el-input v-model="form.ruleCode" :disabled="dialogMode === 'edit'" placeholder="如 RULE-FEE-001" />
+          <el-input v-model="form.ruleCode" :disabled="dialogMode === 'edit'" placeholder="如 RULE-STOCK-001" />
         </el-form-item>
         <el-form-item label="规则名称" required>
           <el-input v-model="form.name" />
@@ -252,7 +252,8 @@
         <el-form-item label="执行引擎">
           <el-select v-model="form.engine" style="width: 100%">
             <el-option label="无" value="" />
-            <el-option label="QC 质控引擎" value="QC" />
+            <el-option v-if="!industrial" label="QC 质控引擎" value="QC" />
+            <el-option v-if="industrial" label="工业约束契约（无执行器）" value="CONTRACT" />
           </el-select>
         </el-form-item>
 
@@ -428,7 +429,7 @@
             v-model="form.expression"
             type="textarea"
             :rows="3"
-            placeholder="用业务语言声明，如：医嘱状态=已取消 的明细，费用状态必须=已退费"
+            placeholder="用业务语言声明，如：已冻结预留不得挪给其他需求"
           />
         </el-form-item>
         <el-form-item label="负责人">
@@ -458,6 +459,7 @@ import { statusText, statusTagType } from '../../../utils/dict'
 import { useConceptStore } from '../../../store/concept'
 import TagInput from './TagInput.vue'
 
+const industrial = import.meta.env.VITE_INDUSTRY === 'forgepilot'
 const router = useRouter()
 const conceptStore = useConceptStore()
 

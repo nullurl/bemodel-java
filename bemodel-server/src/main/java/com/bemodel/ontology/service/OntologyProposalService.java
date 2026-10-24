@@ -43,6 +43,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class OntologyProposalService extends ServiceImpl<OntologyProposalMapper, OntologyProposal> {
 
+    @Value("${bemodel.domain-context:医疗}")
+    private String domainContext = "医疗";
+
     private final OntologyMissMapper missMapper;
     private final ProposalRunMapper runMapper;
     private final MissService missService;
@@ -132,7 +135,7 @@ public class OntologyProposalService extends ServiceImpl<OntologyProposalMapper,
      */
     private Map<String, Object> suggest(OntologyMiss miss) {
         Optional<String> llm = deepSeekClient.chat("MISS_PROPOSAL",
-                "你是医疗本体治理助手，为词表外说法做近义预审并给出候选概念卡。只返回JSON，不要多余文字。",
+                "你是" + domainContext + "本体治理助手，为词表外说法做近义预审并给出候选概念卡。只返回JSON，不要多余文字。",
                 buildProposalPrompt(miss));
         if (llm.isEmpty()) {
             return null;
